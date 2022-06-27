@@ -21,7 +21,7 @@ public class FileService {
         this.userMapper = userMapper;
     }
 
-    public void addFile(MultipartFile multipartFile, String username) throws IOException {
+    public int addFile(MultipartFile multipartFile, String username) throws IOException {
         InputStream fis = multipartFile.getInputStream();
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         byte[] data = new byte[1024];
@@ -37,15 +37,25 @@ public class FileService {
         String fileSize = String.valueOf(multipartFile.getSize());
         Integer userId = userMapper.getUser(username).getUserId();
         File file = new File(null, fileName, contentType, fileSize, userId, fileData);
-        fileMapper.insert(file);
+        return fileMapper.insert(file);
     }
 
-    public List<File> getFilesList(Integer userId) {
+    public List<String> getFilesList(Integer userId) {
         return fileMapper.getFilesByUser(userId);
     }
 
     public File getFile(String fileName) {
         return fileMapper.getFile(fileName);
+    }
+
+    public boolean isFilenameAvailable(Integer userId, String fileName) {
+        List<String> filesList = getFilesList(userId);
+        for(String file : filesList) {
+            if(file.equals(fileName)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void deleteFile(String fileName) {
