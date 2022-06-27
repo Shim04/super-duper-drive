@@ -7,10 +7,10 @@ import java.util.List;
 
 @Mapper
 public interface FileMapper {
-    @Select("SELECT * FROM FILES WHERE filename = #{fileName}")
-    File getFile(String fileName);
+    @Select("SELECT * FROM FILES WHERE filename = #{fileName} AND userid = #{userId}")
+    File getFile(String fileName, Integer userId);
 
-    @Select("SELECT filename FROM FILES WHERE userId = #{userId}")
+    @Select("SELECT filename FROM FILES WHERE userid = #{userId}")
     List<String> getFilesByUser(Integer userId);
 
     @Insert("INSERT INTO FILES (filename, contenttype, filesize, userid, filedata)" +
@@ -19,5 +19,5 @@ public interface FileMapper {
     int insert(File file);
 
     @Delete("DELETE FROM FILES WHERE filename = #{fileName}")
-    void delete(String fileName);
+    int delete(String fileName);
 }

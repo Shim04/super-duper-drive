@@ -58,13 +58,13 @@ public class HomeController {
         Integer userId = getUserId(authentication);
         MultipartFile multipartFile = fileForm.getFile();
         String fileName = multipartFile.getOriginalFilename();
-        if(!fileService.isFilenameAvailable(userId, fileName)) {
+        if(!fileService.isFilenameAvailable(fileName, userId)) {
             error = "The filename already exists.";
             result = "error";
         }
         if(error == null) {
-            int rowsAdded = fileService.addFile(multipartFile, authentication.getName());
-            if(rowsAdded < 0) {
+            int rowsChanged = fileService.addFile(multipartFile, authentication.getName());
+            if(rowsChanged == 0) {
                 result = "notsaved";
             }
         }
@@ -79,8 +79,9 @@ public class HomeController {
             value = "/get-file/{fileName}",
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody
-    public byte[] getFile(@PathVariable String fileName) {
-        return fileService.getFile(fileName).getFileData();
+    public byte[] getFile(Authentication authentication, @PathVariable String fileName) {
+        Integer userId = getUserId(authentication);
+        return fileService.getFile(fileName, userId).getFileData();
     }
 
     @GetMapping(value = "/delete-file/{fileName}")
@@ -88,8 +89,12 @@ public class HomeController {
             Authentication authentication, @PathVariable String fileName,
             FileForm fileForm, NoteForm noteForm, CredentialForm credentialForm,
             Model model) {
-        fileService.deleteFile(fileName);
-        model.addAttribute("result", "success");
+        String result = "success";
+        int rowsChanged = fileService.deleteFile(fileName);
+        if(rowsChanged == 0) {
+            result = "notsaved";
+        }
+        model.addAttribute("result", result);
         return "result";
     }
 

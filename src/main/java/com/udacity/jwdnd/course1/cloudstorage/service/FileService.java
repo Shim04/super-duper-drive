@@ -44,21 +44,19 @@ public class FileService {
         return fileMapper.getFilesByUser(userId);
     }
 
-    public File getFile(String fileName) {
-        return fileMapper.getFile(fileName);
+    public File getFile(String fileName, Integer userId) {
+        return fileMapper.getFile(fileName, userId);
     }
 
-    public boolean isFilenameAvailable(Integer userId, String fileName) {
-        List<String> filesList = getFilesList(userId);
-        for(String file : filesList) {
-            if(file.equals(fileName)) {
-                return false;
-            }
+    public boolean isFilenameAvailable(String fileName, Integer userId) {
+        if(getFile(fileName, userId) != null) {
+            return false;
+        } else {
+            return true;
         }
-        return true;
     }
 
-    public void deleteFile(String fileName) {
-        fileMapper.delete(fileName);
+    public int deleteFile(String fileName) {
+        return fileMapper.delete(fileName);
     }
 }
