@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.awt.*;
 import java.io.IOException;
@@ -40,26 +41,32 @@ public class HomeController {
     public String getHomePage(
             Authentication authentication, FileForm fileForm, NoteForm noteForm,
             CredentialForm credentialForm, Model model) {
-        Integer userId = getUserId(authentication);
-        model.addAttribute("files", fileService.getFilesList(userId));
-        model.addAttribute("notes", noteService.getNotesList(userId));
-        model.addAttribute("credentials", credentialService.getCredentialsList(userId));
-        model.addAttribute("encryptionService", encryptionService);
-        return "home";
+        String username = authentication.getName();
+        User user = userService.getUser(username);
+        if(user != null) {
+            Integer userId = getUserId(authentication);
+            model.addAttribute("files", fileService.getFilesList(userId));
+            model.addAttribute("notes", noteService.getNotesList(userId));
+            model.addAttribute("credentials", credentialService.getCredentialsList(userId));
+            model.addAttribute("encryptionService", encryptionService);
+            return "home";
+        }
+        return "signup";
     }
 
     @PostMapping
     public String uploadFile(
-            Authentication authentication, FileForm fileForm, NoteForm noteForm,
-            CredentialForm credentialForm, Model model) throws IOException {
+            Authentication authentication, FileForm fileForm, Model model) throws IOException {
         String error = null;
         String result = "success";
-
         Integer userId = getUserId(authentication);
         MultipartFile multipartFile = fileForm.getFile();
         String fileName = multipartFile.getOriginalFilename();
         if(!fileService.isFilenameAvailable(fileName, userId)) {
             error = "The filename already exists.";
+            result = "error";
+        } else if(fileName.isEmpty()) {
+            error = "The filename should not be empty.";
             result = "error";
         }
         if(error == null) {
@@ -85,10 +92,7 @@ public class HomeController {
     }
 
     @GetMapping(value = "/delete-file/{fileName}")
-    public String deleteFile(
-            Authentication authentication, @PathVariable String fileName,
-            FileForm fileForm, NoteForm noteForm, CredentialForm credentialForm,
-            Model model) {
+    public String deleteFile(@PathVariable String fileName, Model model) {
         String result = "success";
         int rowsChanged = fileService.deleteFile(fileName);
         if(rowsChanged == 0) {

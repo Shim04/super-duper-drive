@@ -27,8 +27,7 @@ public class NoteController {
 
     @PostMapping("/add-note")
     public String addNote(
-            Authentication authentication, FileForm fileForm, NoteForm noteForm,
-            CredentialForm credentialForm, Model model) {
+            Authentication authentication, NoteForm noteForm, Model model) {
         String result = "success";
         String username = authentication.getName();
         String noteTitle = noteForm.getNoteTitle();
@@ -49,10 +48,7 @@ public class NoteController {
     }
 
     @GetMapping(value = "/delete-note/{noteId}")
-    public String deleteNote(
-            Authentication authentication, @PathVariable Integer noteId,
-            FileForm fileForm, NoteForm noteForm, CredentialForm credentialForm,
-            Model model) {
+    public String deleteNote( @PathVariable Integer noteId, Model model) {
         String result = "success";
         int rowChanged = noteService.deleteNote(noteId);
         if(rowChanged == 0) {

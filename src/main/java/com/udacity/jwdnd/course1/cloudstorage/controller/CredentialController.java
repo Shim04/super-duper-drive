@@ -1,9 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
-import com.udacity.jwdnd.course1.cloudstorage.model.CredentialForm;
-import com.udacity.jwdnd.course1.cloudstorage.model.FileForm;
-import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
+import com.udacity.jwdnd.course1.cloudstorage.model.*;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
@@ -33,8 +30,7 @@ public class CredentialController {
 
     @PostMapping("/add-credential")
     public String addCredential(
-            Authentication authentication, FileForm fileForm, NoteForm noteForm,
-            CredentialForm credentialForm, Model model) {
+            Authentication authentication, CredentialForm credentialForm, Model model) {
         String username = authentication.getName();
         String url = credentialForm.getUrl();
         String credentialId = credentialForm.getCredentialId();
@@ -56,15 +52,14 @@ public class CredentialController {
         if(rowChanged == 0) {
             result = "notsaved";
         }
+        User user = userService.getUser(authentication.getName());
+        model.addAttribute("credentials", credentialService.getCredentialsList(user.getUserId()));
         model.addAttribute("result", result);
         return "result";
     }
 
     @GetMapping(value = "/delete-credential/{credentialId}")
-    public String deleteCredential(
-            Authentication authentication, @PathVariable Integer credentialId,
-            FileForm fileForm, NoteForm noteForm, CredentialForm credentialForm,
-            Model model) {
+    public String deleteCredential(@PathVariable Integer credentialId, Model model) {
         String result = "success";
         int rowChanged = credentialService.deleteCredential(credentialId);
         if(rowChanged == 0) {
