@@ -19,8 +19,8 @@ public interface CredentialMapper {
     int insert(Credential credential);
 
     @Delete("DELETE * FROM CREDENTIALS WHERE credentialid = #{credentialId}")
-    void delete(Integer credentialId);
+    int delete(Integer credentialId);
 
     @Update("UPDATE CREDENTIALS SET url = #{url}, key = #{key}, password = #{password}, username = #{username} WHERE credentialid = #{credentialId}")
-    void update(Integer credentialId, String url, String key, String password, String username);
+    int update(Integer credentialId, String url, String key, String password, String username);
 }

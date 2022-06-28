@@ -25,7 +25,7 @@ public class NoteController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/add-note")
+    @PostMapping("/add-note")
     public String addNote(
             Authentication authentication, FileForm fileForm, NoteForm noteForm,
             CredentialForm credentialForm, Model model) {
