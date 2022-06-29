@@ -45,6 +45,6 @@ public class HomeController {
             model.addAttribute("encryptionService", encryptionService);
             return "home";
         }
-        return "signup";
+        return "login";
     }
 }
