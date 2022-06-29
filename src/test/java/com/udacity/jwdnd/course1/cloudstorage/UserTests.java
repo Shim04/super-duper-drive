@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import com.udacity.jwdnd.course1.cloudstorage.page.HomePage;
 import com.udacity.jwdnd.course1.cloudstorage.page.LoginPage;
 import com.udacity.jwdnd.course1.cloudstorage.page.SignupPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -74,7 +75,8 @@ public class UserTests {
         // Home Page
         driver.get(baseURL + "/home");
         assertEquals("Home", driver.getTitle());
-
-        // Todo: Logout
+        HomePage homePage = new HomePage(driver);
+        homePage.logout();
+        assertEquals("Login", driver.getTitle());
     }
 }
