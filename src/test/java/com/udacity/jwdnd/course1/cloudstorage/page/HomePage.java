@@ -2,12 +2,14 @@ package com.udacity.jwdnd.course1.cloudstorage.page;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class HomePage {
     @FindBy(id = "logout-button")
@@ -116,6 +118,11 @@ public class HomePage {
         deleteNoteButton.click();
     }
 
+    public boolean noNote(WebDriver driver) {
+        return !canFindElement(By.className("display-note-title"), driver) &&
+                !canFindElement(By.className("display-note-description"), driver);
+    }
+
     /////////////////////////Credential//////////////////////
 
     public void createCredential(Credential credential) throws InterruptedException {
@@ -160,5 +167,20 @@ public class HomePage {
         credentialsTab.click();
         Thread.sleep(3000);
         deleteCredentialButton.click();
+    }
+
+    public boolean noCredential(WebDriver driver) {
+        return !canFindElement(By.className("display-credential-url"), driver) &&
+                !canFindElement(By.className("display-credential-username"), driver) &&
+                !canFindElement(By.className("display-credential-password"), driver);
+    }
+
+    private boolean canFindElement(By key, WebDriver driver) {
+        try {
+            driver.findElement(key);
+            return true;
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            return false;
+        }
     }
 }

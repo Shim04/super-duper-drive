@@ -13,7 +13,7 @@
             <div th:if="${result == 'success'}" class="alert alert-success fill-parent">
                 <h1 class="display-5" id="success">Success</h1>
                 <span>Your changes were successfully saved.
-                    Click <a href="/home">here</a> to continue.
+                    Click <a href="/home" id="return-home-link">here</a> to continue.
                 </span>
             </div>
             <div th:if="${result == 'notsaved'}" class="alert alert-danger fill-parent">

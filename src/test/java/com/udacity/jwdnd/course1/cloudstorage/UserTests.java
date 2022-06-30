@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserTests {
     @LocalServerPort
-    public int port;
-    public static WebDriver driver;
-    public String baseURL;
+    private int port;
+    private static WebDriver driver;
+    private String baseURL;
 
     @BeforeAll
     public static void beforeAll() {
@@ -59,7 +59,7 @@ public class UserTests {
     // Test after signing up and logging in, the home page is accessible
     // Test after logging out, the home page is no longer accessible.
     @Test
-    public void testUserSignupLoginLogout() {
+    public void testUserSignupLoginLogout() throws InterruptedException {
         String username = "Tester";
         String password = "12345";
         // Signup
@@ -77,6 +77,7 @@ public class UserTests {
         assertEquals("Home", driver.getTitle());
         HomePage homePage = new HomePage(driver);
         homePage.logout();
+        Thread.sleep(3000);
         assertEquals("Login", driver.getTitle());
     }
 }
