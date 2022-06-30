@@ -10,12 +10,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
@@ -30,6 +26,10 @@ public class NoteTests {
     private String baseURL;
     private HomePage homePage;
     private ResultPage resultPage;
+    private static final String TEST_TITLE = "Note Title";
+    private static final String TEST_DESCRIPTION = "Note Description";
+    private static final String EDIT_TITLE = "Edit Title";
+    private static final String EDIT_DESCRIPTION = "Edit Description";
 
     @BeforeAll
     public static void beforeAll() {
@@ -52,43 +52,33 @@ public class NoteTests {
 
     @Test
     public void testNoteCreationAndViewing() throws InterruptedException {
-        String title = "Note Title";
-        String description = "Note Description";
-        createNote(title, description, homePage, resultPage);
+        createNote(TEST_TITLE, TEST_DESCRIPTION, homePage, resultPage);
         Note note = homePage.getFirstNote();
         // Assertion
-        assertEquals(title, note.getNoteTitle());
-        assertEquals(description, note.getNoteDescription());
+        assertEquals(TEST_TITLE, note.getNoteTitle());
+        assertEquals(TEST_DESCRIPTION, note.getNoteDescription());
         deleteNote(homePage, resultPage);
     }
 
     @Test
     public void testNoteEditing() throws InterruptedException {
-        createNote("Note Title", "Note Description", homePage, resultPage);
-        homePage.editNote("Edit Title", "Edit Description");
+        createNote(TEST_TITLE, TEST_DESCRIPTION, homePage, resultPage);
+        homePage.editNote(EDIT_TITLE, EDIT_DESCRIPTION);
         resultPage.returnHome();
         Note note = homePage.getFirstNote();
         // Assertion
-        assertEquals("Edit Title", note.getNoteTitle());
-        assertEquals("Edit Description", note.getNoteDescription());
+        assertEquals(EDIT_TITLE, note.getNoteTitle());
+        assertEquals(EDIT_DESCRIPTION, note.getNoteDescription());
         deleteNote(homePage, resultPage);
     }
 
     @Test
     public void testNoteDeletion() throws InterruptedException {
-        String title = "Note Title";
-        String description = "Note Description";
-        createNote(title, description, homePage, resultPage);
+        createNote(TEST_TITLE, TEST_DESCRIPTION, homePage, resultPage);
         // Assertion
         assertFalse(homePage.noNote(driver));
 
         deleteNote(homePage, resultPage);
-        WebDriverWait wait = new WebDriverWait(driver, 3);
-        WebElement marker = null;
-        try {
-            marker = wait.until(webDriver -> webDriver.findElement(By.id("return-home-link")));
-        } catch (TimeoutException e) {
-        }
         // Assertion
         assertTrue(homePage.noNote(driver));
     }
@@ -96,9 +86,6 @@ public class NoteTests {
     private void createNote(String title, String description, HomePage homePage, ResultPage resultPage) throws InterruptedException {
         signupLogin();
         driver.get(baseURL + "/home");
-        WebDriverWait wait = new WebDriverWait(driver, 3);
-        WebElement homeMarker = wait.until(webDriver -> webDriver.findElement(By.id("nav-files-tab")));
-        assertNotNull(homeMarker);
         homePage.createNote(title, description);
         resultPage.returnHome();
     }

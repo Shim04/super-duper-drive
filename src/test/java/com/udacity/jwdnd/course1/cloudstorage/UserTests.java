@@ -8,12 +8,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
@@ -63,7 +59,7 @@ public class UserTests {
     // Test after signing up and logging in, the home page is accessible
     // Test after logging out, the home page is no longer accessible.
     @Test
-    public void testUserSignupLoginLogout() {
+    public void testUserSignupLoginLogout() throws InterruptedException {
         String username = "Tester";
         String password = "12345";
         // Signup
@@ -74,30 +70,15 @@ public class UserTests {
         // Login
         driver.get(baseURL + "/login");
         LoginPage loginPage = new LoginPage(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 3);
-        WebElement marker = null;
-        try {
-            marker = wait.until(webDriver -> webDriver.findElement(By.id("inputUsername")));
-        } catch (TimeoutException e) {
-        }
         loginPage.login(username, password);
 
         // Home Page
         driver.get(baseURL + "/home");
-        marker = null;
-        try {
-            marker = wait.until(webDriver -> webDriver.findElement(By.id("nav-files-tab")));
-        } catch (TimeoutException e) {
-        }
         assertEquals("Home", driver.getTitle());
 
         HomePage homePage = new HomePage(driver);
         homePage.logout();
-        marker = null;
-        try {
-            marker = wait.until(webDriver -> webDriver.findElement(By.id("inputUsername")));
-        } catch (TimeoutException e) {
-        }
+        Thread.sleep(3000);
         assertEquals("Login", driver.getTitle());
     }
 }

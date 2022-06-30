@@ -69,6 +69,12 @@ public class HomePage {
     @FindBy(id = "display-credential-password")
     private WebElement firstCredentialPassword;
 
+    @FindBy(id = "credential-password")
+    private WebElement credentialOriginalPassword;
+
+    @FindBy(id = "close-edit-credential-button")
+    private WebElement closeEditCredentialButton;
+
     @FindBy(id = "edit-credential-button")
     private WebElement editCredentialButton;
 
@@ -103,8 +109,8 @@ public class HomePage {
     }
 
     public Note getFirstNote() throws InterruptedException {
-         getNodesTab();
-         Thread.sleep(3000);
+        getNodesTab();
+        Thread.sleep(3000);
         String title = firstNoteTitle.getText();
         String description = firstNoteDescription.getText();
         return new Note(title, description);
@@ -150,12 +156,6 @@ public class HomePage {
         submitCredentialButton.click();
     }
 
-    public void createCredentials(List<Credential> credentialList) throws InterruptedException {
-        for(Credential credential : credentialList) {
-            createCredential(credential);
-        }
-    }
-
     public Credential getFirstCredential() throws InterruptedException {
         getCredentialsTab();
         Thread.sleep(3000);
@@ -163,6 +163,16 @@ public class HomePage {
         String username = firstCredentialUsername.getText();
         String password = firstCredentialPassword.getText();
         return new Credential(url, username, password);
+    }
+
+    public String getFirstCredentialPassword() throws InterruptedException {
+        getCredentialsTab();
+        Thread.sleep(3000);
+        editCredentialButton.click();
+        Thread.sleep(3000);
+        String password = credentialOriginalPassword.getAttribute("value");
+        closeEditCredentialButton.click();
+        return password;
     }
 
     public void editCredential(Credential credential) throws InterruptedException {
