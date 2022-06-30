@@ -82,6 +82,7 @@
                                 <tbody>
                                     <tr th:each="note : ${notes}">
                                         <td>
+                                            <!--Edit Note-->
                                             <button type="button" class="btn btn-success"
                                                     id="edit-note-button"
                                                     th:data-id="${note.getNoteId()}"
@@ -90,14 +91,15 @@
                                                     th:onclick="showNoteModal(this.getAttribute('data-id'), this.getAttribute('data-title'), this.getAttribute('data-description'))">
                                                 Edit
                                             </button>
+                                            <!--Delete Note-->
                                             <a class="btn btn-danger"
                                                id="delete-note-button"
                                                th:href="@{/note/delete-note/__${note.getNoteId()}__}">
                                                 Delete
                                             </a>
                                         </td>
-                                        <th class="display-note-title" scope="row" th:text="${note.getNoteTitle()}">Example Note Title</th>
-                                        <td class="display-note-description" th:text="${note.getNoteDescription()}">Example Note Description </td>
+                                        <th id="display-note-title" scope="row" th:text="${note.getNoteTitle()}">Example Note Title</th>
+                                        <td id="display-note-description" th:text="${note.getNoteDescription()}">Example Note Description </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -170,13 +172,13 @@
                                             Delete
                                         </a>
                                     </td>
-                                    <th class="display-credential-url" scope="row" th:text="${credential.getUrl()}">
+                                    <th id="display-credential-url" scope="row" th:text="${credential.getUrl()}">
                                         Example Credential URL
                                     </th>
-                                    <td class="display-credential-username" th:text="${credential.getUsername()}">
+                                    <td id="display-credential-username" th:text="${credential.getUsername()}">
                                         Example Credential Username
                                     </td>
-                                    <td class="display-credential-password" th:text="${credential.getPassword()}">
+                                    <td id="display-credential-password" th:text="${credential.getPassword()}">
                                         Example Credential Password
                                     </td>
                                 </tr>

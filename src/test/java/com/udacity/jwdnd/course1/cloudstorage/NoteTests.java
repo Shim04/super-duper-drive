@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -58,16 +59,19 @@ public class NoteTests {
         // Assertion
         assertEquals(title, note.getNoteTitle());
         assertEquals(description, note.getNoteDescription());
+        deleteNote(homePage, resultPage);
     }
 
     @Test
     public void testNoteEditing() throws InterruptedException {
         createNote("Note Title", "Note Description", homePage, resultPage);
         homePage.editNote("Edit Title", "Edit Description");
+        resultPage.returnHome();
         Note note = homePage.getFirstNote();
         // Assertion
         assertEquals("Edit Title", note.getNoteTitle());
         assertEquals("Edit Description", note.getNoteDescription());
+        deleteNote(homePage, resultPage);
     }
 
     @Test
@@ -79,6 +83,12 @@ public class NoteTests {
         assertFalse(homePage.noNote(driver));
 
         deleteNote(homePage, resultPage);
+        WebDriverWait wait = new WebDriverWait(driver, 3);
+        WebElement marker = null;
+        try {
+            marker = wait.until(webDriver -> webDriver.findElement(By.id("return-home-link")));
+        } catch (TimeoutException e) {
+        }
         // Assertion
         assertTrue(homePage.noNote(driver));
     }

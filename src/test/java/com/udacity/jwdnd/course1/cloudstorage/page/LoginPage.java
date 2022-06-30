@@ -12,8 +12,8 @@ public class LoginPage {
     @FindBy(id = "inputPassword")
     private WebElement inputPassword;
 
-    @FindBy(id = "button-login")
-    private WebElement buttonLogIn;
+    @FindBy(id = "login-button")
+    private WebElement loginButton;
 
     public LoginPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
@@ -22,6 +22,6 @@ public class LoginPage {
     public void login(String username, String password) {
         inputUsername.sendKeys(username);
         inputPassword.sendKeys(password);
-        buttonLogIn.click();
+        loginButton.click();
     }
 }

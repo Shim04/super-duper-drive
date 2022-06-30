@@ -30,10 +30,10 @@ public class HomePage {
     @FindBy(id = "submit-note-button")
     private WebElement submitNoteButton;
 
-    @FindBy(className = "display-note-title")
+    @FindBy(id = "display-note-title")
     private WebElement firstNoteTitle;
 
-    @FindBy(className = "display-note-description")
+    @FindBy(id = "display-note-description")
     private WebElement firstNoteDescription;
 
     @FindBy(id = "edit-note-button")
@@ -60,13 +60,13 @@ public class HomePage {
     @FindBy(id = "submit-credential-button")
     private WebElement submitCredentialButton;
 
-    @FindBy(className = "display-credential-url")
+    @FindBy(id = "display-credential-url")
     private WebElement firstCredentialUrl;
 
-    @FindBy(className = "display-credential-username")
+    @FindBy(id = "display-credential-username")
     private WebElement firstCredentialUsername;
 
-    @FindBy(className = "display-credential-password")
+    @FindBy(id = "display-credential-password")
     private WebElement firstCredentialPassword;
 
     @FindBy(id = "edit-credential-button")
@@ -75,7 +75,10 @@ public class HomePage {
     @FindBy(id = "delete-credential-button")
     private WebElement deleteCredentialButton;
 
+    private WebDriver driver;
+
     public HomePage(WebDriver driver) {
+        this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
@@ -84,9 +87,13 @@ public class HomePage {
     }
 
     /////////////////////////Note//////////////////////
+    public void getNodesTab() {
+        driver.manage().window().maximize();
+        notesTab.click();
+    }
 
     public void createNote(String title, String description) throws InterruptedException {
-        notesTab.click();
+        getNodesTab();
         Thread.sleep(3000);
         addNoteButton.click();
         Thread.sleep(3000);
@@ -95,16 +102,19 @@ public class HomePage {
         submitNoteButton.click();
     }
 
-    public Note getFirstNote() {
+    public Note getFirstNote() throws InterruptedException {
+         getNodesTab();
+         Thread.sleep(3000);
         String title = firstNoteTitle.getText();
         String description = firstNoteDescription.getText();
         return new Note(title, description);
     }
 
     public void editNote(String title, String description) throws InterruptedException {
-        notesTab.click();
+        // getNodesTab();
         Thread.sleep(3000);
         editNoteButton.click();
+        Thread.sleep(3000);
         noteTitle.clear();
         noteTitle.sendKeys(title);
         noteDescription.clear();
@@ -113,20 +123,24 @@ public class HomePage {
     }
 
     public void deleteNote() throws InterruptedException {
-        notesTab.click();
+        getNodesTab();
         Thread.sleep(3000);
         deleteNoteButton.click();
     }
 
     public boolean noNote(WebDriver driver) {
-        return !canFindElement(By.className("display-note-title"), driver) &&
-                !canFindElement(By.className("display-note-description"), driver);
+        return !canFindElement(By.id("display-note-title"), driver) &&
+                !canFindElement(By.id("display-note-description"), driver);
     }
 
     /////////////////////////Credential//////////////////////
+    public void getCredentialsTab() {
+        driver.manage().window().maximize();
+        credentialsTab.click();
+    }
 
     public void createCredential(Credential credential) throws InterruptedException {
-        credentialsTab.click();
+        getCredentialsTab();
         Thread.sleep(3000);
         addCredentialButton.click();
         Thread.sleep(3000);
@@ -142,7 +156,9 @@ public class HomePage {
         }
     }
 
-    public Credential getFirstCredential() {
+    public Credential getFirstCredential() throws InterruptedException {
+        getCredentialsTab();
+        Thread.sleep(3000);
         String url = firstCredentialUrl.getText();
         String username = firstCredentialUsername.getText();
         String password = firstCredentialPassword.getText();
@@ -150,7 +166,7 @@ public class HomePage {
     }
 
     public void editCredential(Credential credential) throws InterruptedException {
-        credentialsTab.click();
+        getCredentialsTab();
         Thread.sleep(3000);
         editCredentialButton.click();
         Thread.sleep(3000);
@@ -164,15 +180,15 @@ public class HomePage {
     }
 
     public void deleteCredential() throws InterruptedException {
-        credentialsTab.click();
+        getCredentialsTab();
         Thread.sleep(3000);
         deleteCredentialButton.click();
     }
 
     public boolean noCredential(WebDriver driver) {
-        return !canFindElement(By.className("display-credential-url"), driver) &&
-                !canFindElement(By.className("display-credential-username"), driver) &&
-                !canFindElement(By.className("display-credential-password"), driver);
+        return !canFindElement(By.id("display-credential-url"), driver) &&
+                !canFindElement(By.id("display-credential-username"), driver) &&
+                !canFindElement(By.id("display-credential-password"), driver);
     }
 
     private boolean canFindElement(By key, WebDriver driver) {
